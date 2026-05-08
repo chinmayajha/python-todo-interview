@@ -22,16 +22,11 @@ def create_todo(title, priority="medium"):
     return todo
 
 
-# BUG 1 — Logic (filter is inverted)
-# Uses `!=` instead of `==`, so ?completed=true returns incomplete todos.
 def filter_todos(completed=None):
     if completed is None:
         return list(todos.values())
     return [todo for todo in todos.values() if todo["completed"] != completed]
 
-
-# BUG 2 — Missing value in validation list
-# "low" is missing from VALID_PRIORITIES, so setting priority="low" always 400s.
 VALID_PRIORITIES = ["medium", "high"]
 
 
@@ -98,9 +93,6 @@ def update_todo(todo_id):
         todo["completed"] = data["completed"]
     return jsonify(todo), 200
 
-
-# BUG 3 — Wrong HTTP status code
-# Returns 201 (Created) on DELETE. Should be 200 (OK).
 @app.route("/todos/<todo_id>", methods=["DELETE"])
 def delete_todo(todo_id):
     """Delete a todo by ID."""
@@ -108,7 +100,7 @@ def delete_todo(todo_id):
     if not todo:
         return jsonify({"error": "Todo not found"}), 404
     del todos[todo_id]
-    return jsonify({"message": "Todo deleted successfully"}), 201  # BUG: should be 200
+    return jsonify({"message": "Todo deleted successfully"}), 201 
 
 
 @app.route("/todos/stats", methods=["GET"])
